@@ -32,7 +32,7 @@ router.post('/pages', (req, res) => {
     });
 });
 
-// update project
+// update page
 router.put('/pages/:id', (req, res) => {
     const pageId = req.params.id;
     const { pageName } = req.body;
@@ -45,9 +45,27 @@ router.put('/pages/:id', (req, res) => {
             console.error(err.stack);
             res.status(500).send('Failed to update data');
         } else if (queryRes.rowCount === 0) {
-            res.status(404).send('Project not found');
+            res.status(404).send('page not found');
         } else {
             res.status(200).json(queryRes.rows[0]); // 업데이트된 프로젝트 반환
+        }
+    });
+});
+
+// delete page
+router.delete('/pages/:id', (req, res) => {
+    const pageId = req.params.id;
+    const query = 'DELETE FROM public.pages WHERE "pageId" = $1 RETURNING *';
+    const values = [pageId];
+
+    dbClient.query(query, values, (err, queryRes) => {
+        if (err) {
+            console.error(err.stack);
+            res.status(500).send('Failed to delete data');
+        } else if (queryRes.rowCount === 0) {
+            res.status(404).send('page not found');
+        } else {
+            res.status(200).json(queryRes.rows[0]); // 삭제된 프로젝트 반환
         }
     });
 });
