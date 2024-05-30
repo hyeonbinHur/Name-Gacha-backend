@@ -3,6 +3,7 @@ const dbClient = require('../db/dbClient');
 
 const router = express.Router();
 
+//Read all projects
 router.get('/projects', (req, res) => {
     dbClient.query('SELECT * FROM public.projects', (err, queryRes) => {
         if (err) {
@@ -14,6 +15,7 @@ router.get('/projects', (req, res) => {
     });
 });
 
+// create project
 router.post('/projects', (req, res) => {
     const { projectName } = req.body;
     const query =
@@ -30,6 +32,7 @@ router.post('/projects', (req, res) => {
     });
 });
 
+// delete project
 router.delete('/projects/:id', (req, res) => {
     const projectId = req.params.id;
     const query =
@@ -48,6 +51,7 @@ router.delete('/projects/:id', (req, res) => {
     });
 });
 
+// update project
 router.put('/projects/:id', (req, res) => {
     const projectId = req.params.id;
     const { projectName } = req.body;

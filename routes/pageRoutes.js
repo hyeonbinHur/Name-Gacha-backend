@@ -3,6 +3,19 @@ const dbClient = require('../db/dbClient');
 
 const router = express.Router();
 
+// read all pages
+router.get('/pages', (req, res) => {
+    dbClient.query('SELECT * FROM public.pages', (err, queryRes) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Failed to retrieve data');
+        } else {
+            res.json(queryRes.rows);
+        }
+    });
+});
+
+// create pages
 router.post('/pages', (req, res) => {
     const { pageName, projectId } = req.body;
     const query =
