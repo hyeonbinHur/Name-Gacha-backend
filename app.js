@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const projectRoutes = require('./routes/projectRoutes');
 const pageRoutes = require('./routes/pageRoutes');
+const functionRoutes = require('./routes/functionRoutes');
+const variableRoutes = require('./routes/variableRoutes');
 
 const app = express();
 const port = 8000;
@@ -11,6 +13,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Use the routes defined in projectRoutes.js
-app.use('/api', projectRoutes, pageRoutes);
+app.use('/api', projectRoutes, pageRoutes, functionRoutes, variableRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -70,4 +70,20 @@ router.delete('/pages/:id', (req, res) => {
     });
 });
 
+// read certain pages
+router.get('/pages/project/:projectId', (req, res) => {
+    const projectId = req.params.projectId;
+    const query = 'SELECT * FROM public.pages WHERE "projectId" = $1';
+    const values = [projectId];
+
+    dbClient.query(query, values, (err, queryRes) => {
+        if (err) {
+            console.error(err.stack);
+            res.status(500).send('Failed to retrieve data');
+        } else {
+            res.json(queryRes.rows);
+        }
+    });
+});
+
 module.exports = router;
