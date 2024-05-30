@@ -48,4 +48,23 @@ router.delete('/projects/:id', (req, res) => {
     });
 });
 
+router.put('/projects/:id', (req, res) => {
+    const projectId = req.params.id;
+    const { projectName } = req.body;
+    const query =
+        'UPDATE public.projects SET "projectName" = $1 WHERE "projectId" = $2 RETURNING *';
+    const values = [projectName, projectId];
+
+    dbClient.query(query, values, (err, queryRes) => {
+        if (err) {
+            console.error(err.stack);
+            res.status(500).send('Failed to update data');
+        } else if (queryRes.rowCount === 0) {
+            res.status(404).send('Project not found');
+        } else {
+            res.status(200).json(queryRes.rows[0]); // 업데이트된 프로젝트 반환
+        }
+    });
+});
+
 module.exports = router;
