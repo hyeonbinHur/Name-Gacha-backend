@@ -32,4 +32,24 @@ router.post('/pages', (req, res) => {
     });
 });
 
+// update project
+router.put('/pages/:id', (req, res) => {
+    const pageId = req.params.id;
+    const { pageName } = req.body;
+    const query =
+        'UPDATE public.pages SET "pageName" = $1 WHERE "pageId" = $2 RETURNING *';
+    const values = [pageName, pageId];
+
+    dbClient.query(query, values, (err, queryRes) => {
+        if (err) {
+            console.error(err.stack);
+            res.status(500).send('Failed to update data');
+        } else if (queryRes.rowCount === 0) {
+            res.status(404).send('Project not found');
+        } else {
+            res.status(200).json(queryRes.rows[0]); // 업데이트된 프로젝트 반환
+        }
+    });
+});
+
 module.exports = router;
