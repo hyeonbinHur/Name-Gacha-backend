@@ -18,7 +18,7 @@ router.get('/variables', (req, res) => {
 router.post('/variables', (req, res) => {
     const { variableName, pageId_fk, variableExp } = req.body;
     const query =
-        'INSERT INTO public.variables ("variableName", "pageId_fk", "variableExp") VALUES ($1, $2) RETURNING *';
+        'INSERT INTO public.variables ("variableName", "pageId_fk", "variableExp") VALUES ($1, $2, $3) RETURNING *';
     const values = [variableName, pageId_fk, variableExp];
 
     dbClient.query(query, values, (err, queryRes) => {
@@ -33,11 +33,11 @@ router.post('/variables', (req, res) => {
 
 // update function
 router.put('/variables/:id', (req, res) => {
-    const vairableId = req.params.id;
+    const variableId = req.params.id;
     const { variableName, variableExp } = req.body;
     const query =
-        'UPDATE public.variables SET "variableName" = $1, "variableExp" = $2 WHERE "functionId" = $3 RETURNING *';
-    const values = [variableName, variableExp];
+        'UPDATE public.variables SET "variableName" = $1, "variableExp" = $2 WHERE "variableId" = $3 RETURNING *';
+    const values = [variableName, variableExp, variableId];
 
     dbClient.query(query, values, (err, queryRes) => {
         if (err) {
@@ -52,11 +52,11 @@ router.put('/variables/:id', (req, res) => {
 });
 
 // delete function
-router.delete('/vairables/:id', (req, res) => {
-    const vairableId = req.params.id;
+router.delete('/variables/:id', (req, res) => {
+    const variableId = req.params.id;
     const query =
-        'DELETE FROM public.variables WHERE "vairableId" = $1 RETURNING *';
-    const values = [vairableId];
+        'DELETE FROM public.variables WHERE "variableId" = $1 RETURNING *';
+    const values = [variableId];
 
     dbClient.query(query, values, (err, queryRes) => {
         if (err) {

@@ -18,7 +18,7 @@ router.get('/functions', (req, res) => {
 router.post('/functions', (req, res) => {
     const { functionName, pageId_fk, functionExp } = req.body;
     const query =
-        'INSERT INTO public.functions ("functionName", "pageId_fk", "functionExp) VALUES ($1, $2) RETURNING *';
+        'INSERT INTO public.functions ("functionName", "pageId_fk", "functionExp") VALUES ($1, $2) RETURNING *';
     const values = [functionName, pageId_fk, functionExp];
 
     dbClient.query(query, values, (err, queryRes) => {
@@ -73,7 +73,7 @@ router.delete('/functions/:id', (req, res) => {
 // read certain function
 router.get('/functions/pages/:pageId', (req, res) => {
     const functionId = req.params.projectId;
-    const query = 'SELECT * FROM public.functions WHERE "functionId" = $1';
+    const query = 'SELECT * FROM public.functions WHERE "pageId" = $1';
     const values = [functionId];
 
     dbClient.query(query, values, (err, queryRes) => {
