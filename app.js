@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Use the routes defined in projectRoutes.js
 app.use(
-    '/api',
+    '/namegacha/api',
     projectRoutes,
     pageRoutes,
     functionRoutes,
