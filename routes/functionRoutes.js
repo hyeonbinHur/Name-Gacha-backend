@@ -72,9 +72,9 @@ router.delete('/functions/:id', (req, res) => {
 
 // read certain function
 router.get('/functions/pages/:pageId', (req, res) => {
-    const functionId = req.params.projectId;
-    const query = 'SELECT * FROM public.functions WHERE "pageId" = $1';
-    const values = [functionId];
+    const pageId = req.params.pageId;
+    const query = 'SELECT * FROM public.functions WHERE "pageId_fk" = $1';
+    const values = [pageId];
 
     dbClient.query(query, values, (err, queryRes) => {
         if (err) {

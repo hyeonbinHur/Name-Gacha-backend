@@ -26,7 +26,7 @@ router.post('/variables', (req, res) => {
             console.error(err.stack);
             res.status(500).send('Failed to insert data');
         } else {
-            res.status(201).json(queryRes.rows[0]); // 새로 추가된 프로젝트 반환
+            res.status(201).json(queryRes.rows[0]);
         }
     });
 });
@@ -46,7 +46,7 @@ router.put('/variables/:id', (req, res) => {
         } else if (queryRes.rowCount === 0) {
             res.status(404).send('page not found');
         } else {
-            res.status(200).json(queryRes.rows[0]); // 업데이트된 프로젝트 반환
+            res.status(200).json(queryRes.rows[0]);
         }
     });
 });
@@ -65,16 +65,16 @@ router.delete('/variables/:id', (req, res) => {
         } else if (queryRes.rowCount === 0) {
             res.status(404).send('page not found');
         } else {
-            res.status(200).json(queryRes.rows[0]); // 삭제된 프로젝트 반환
+            res.status(200).json(queryRes.rows[0]);
         }
     });
 });
 
 // read certain variables
 router.get('/variables/pages/:pageId', (req, res) => {
-    const variableId = req.params.projectId;
-    const query = 'SELECT * FROM public.variables WHERE "pageId" = $1';
-    const values = [variableId];
+    const pageId = req.params.pageId;
+    const query = 'SELECT * FROM public.variables WHERE "pageId_fk" = $1';
+    const values = [pageId];
 
     dbClient.query(query, values, (err, queryRes) => {
         if (err) {
