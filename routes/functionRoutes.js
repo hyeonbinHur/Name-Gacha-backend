@@ -18,7 +18,7 @@ router.get('/functions', (req, res) => {
 router.post('/functions', (req, res) => {
     const { functionName, pageId_fk, functionExp } = req.body;
     const query =
-        'INSERT INTO public.functions ("functionName", "pageId_fk", "functionExp") VALUES ($1, $2) RETURNING *';
+        'INSERT INTO public.functions ("functionName", "pageId_fk", "functionExp") VALUES ($1, $2, $3) RETURNING *';
     const values = [functionName, pageId_fk, functionExp];
 
     dbClient.query(query, values, (err, queryRes) => {
@@ -37,7 +37,7 @@ router.put('/functions/:id', (req, res) => {
     const { functionName, functionExp } = req.body;
     const query =
         'UPDATE public.functions SET "functionName" = $1, "functionExp" = $2 WHERE "functionId" = $3 RETURNING *';
-    const values = [functionName, functionExp];
+    const values = [functionName, functionExp, functionId];
 
     dbClient.query(query, values, (err, queryRes) => {
         if (err) {

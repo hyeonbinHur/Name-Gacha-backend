@@ -70,7 +70,7 @@ router.delete('/variables/:id', (req, res) => {
     });
 });
 
-// read certain function
+// read certain variables
 router.get('/variables/pages/:pageId', (req, res) => {
     const variableId = req.params.projectId;
     const query = 'SELECT * FROM public.variables WHERE "pageId" = $1';
