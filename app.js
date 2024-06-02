@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+import { OpenAI } from 'openai';
+
 const express = require('express');
 const cors = require('cors');
 const projectRoutes = require('./routes/projectRoutes');
@@ -24,3 +27,9 @@ app.use(
 );
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+dotenv.config();
+
+const openai = new OpenAI({
+    apiKey: process.env.OPEN_AI_API_KEY,
+});

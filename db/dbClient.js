@@ -1,11 +1,13 @@
+import * as dotenv from 'dotenv';
+
 const { Client } = require('pg');
 
 const dbClient = new Client({
     host: 'localhost',
     port: 5432,
-    user: 'postgres',
-    password: 'Gjgusqls1!',
-    database: 'NameGachaDatabase',
+    user: process.env.USER_NAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE_NAME,
 });
 
 dbClient.connect((err) => {
