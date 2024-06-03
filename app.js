@@ -33,3 +33,15 @@ dotenv.config();
 const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_API_KEY,
 });
+
+// openai.beta.assistants.create({
+//     name: 'NameGacha',
+//     instructions: 'You need to suggest 9 names of variable or function',
+//     tools: [
+//         {
+//             type: 'code_interpreter',
+//         },
+//     ],
+
+//     model:
+// });
