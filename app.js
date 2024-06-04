@@ -1,13 +1,12 @@
 import * as dotenv from 'dotenv';
 import { OpenAI } from 'openai';
-
-const express = require('express');
-const cors = require('cors');
-const projectRoutes = require('./routes/projectRoutes');
-const pageRoutes = require('./routes/pageRoutes');
-const functionRoutes = require('./routes/functionRoutes');
-const variableRoutes = require('./routes/variableRoutes');
-const allTogetherRoutes = require('./routes/allTogetherRoutes');
+import express from 'express';
+import cors from 'cors';
+import projectRoutes from './routes/projectRoutes.js';
+import pageRoutes from './routes/pageRoutes.js';
+import functionRoutes from './routes/functionRoutes.js';
+import variableRoutes from './routes/variableRoutes.js';
+import allTogetherRoutes from './routes/allTogetherRoutes.js';
 
 const app = express();
 const port = 8080;

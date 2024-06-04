@@ -1,5 +1,5 @@
-const express = require('express');
-const dbClient = require('../db/dbClient');
+import express from 'express';
+import dbClient from '../db/dbClient.js';
 
 const router = express.Router();
 
@@ -13,6 +13,23 @@ router.get('/projects', (req, res) => {
             res.json(queryRes.rows);
         }
     });
+});
+
+router.get('/projects/:id', (req, res) => {
+    const projectId = req.params.id;
+
+    dbClient.query(
+        'SELECT * FROM public.projects WHERE "projectId" = $1',
+        [projectId],
+        (err, queryRes) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Failed to retrieve data');
+            } else {
+                res.json(queryRes.rows);
+            }
+        }
+    );
 });
 
 // create project
@@ -71,4 +88,4 @@ router.put('/projects/:id', (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

@@ -1,5 +1,6 @@
-const express = require('express');
-const dbClient = require('../db/dbClient');
+import express from 'express';
+import dbClient from '../db/dbClient.js';
+
 const router = express.Router();
 
 // read all functions
@@ -86,4 +87,4 @@ router.get('/variables/pages/:pageId', (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;
