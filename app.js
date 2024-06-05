@@ -7,6 +7,7 @@ import pageRoutes from './routes/pageRoutes.js';
 import functionRoutes from './routes/functionRoutes.js';
 import variableRoutes from './routes/variableRoutes.js';
 import allTogetherRoutes from './routes/allTogetherRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 const port = 8080;
@@ -22,7 +23,8 @@ app.use(
     pageRoutes,
     functionRoutes,
     variableRoutes,
-    allTogetherRoutes
+    allTogetherRoutes,
+    authRoutes
 );
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

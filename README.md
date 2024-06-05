@@ -13,3 +13,7 @@
 # cors
 
 > npm install cors
+
+# nodemon
+
+npm install --save-dev nodemon
