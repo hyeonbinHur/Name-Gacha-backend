@@ -16,4 +16,8 @@
 
 # nodemon
 
-npm install --save-dev nodemon
+> npm install --save-dev nodemon
+
+# jWT & cookie-parser
+
+> npm install jsonwebtoken cookie-parser

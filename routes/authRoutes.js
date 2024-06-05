@@ -44,11 +44,18 @@ router.get('/sign-in', async (req, res) => {
         if (hashPassword !== user.userPassword) {
             return res.status(401).send('Invalid password');
         }
-        res.status(200).send('Login successful');
+        // res.status(200).send('Login successful');
+        res.json(user.uuid);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 });
+
+//user update userInfo
+
+//user add project
+
+//user delete project
 
 export default router;

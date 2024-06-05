@@ -22,7 +22,6 @@ functions f ON pa."pageId" = f."pageId_fk"
 WHERE 
 p."projectId" = $1;
     `;
-
     dbClient.query(query, [projectId], (err, queryRes) => {
         if (err) {
             console.error(err);
@@ -33,7 +32,6 @@ p."projectId" = $1;
                 projectName: queryRes.rows[0]?.projectName,
                 pages: [],
             };
-
             queryRes.rows.forEach((row) => {
                 let page = data.pages.find((p) => p.pageId === row.pageId);
                 if (!page) {
@@ -45,7 +43,6 @@ p."projectId" = $1;
                     };
                     data.pages.push(page);
                 }
-
                 if (
                     row.variableId &&
                     !page.variables.some((v) => v.variableId === row.variableId)
@@ -56,7 +53,6 @@ p."projectId" = $1;
                         variableExp: row.variableExp,
                     });
                 }
-
                 if (
                     row.functionId &&
                     !page.functions.some((f) => f.functionId === row.functionId)
