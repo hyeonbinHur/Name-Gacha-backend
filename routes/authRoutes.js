@@ -2,6 +2,7 @@ import express from 'express';
 import dbClient from '../db/dbClient.js';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { access } from 'fs';
 
 const router = express.Router();
 
@@ -25,6 +26,7 @@ const findUser = (userId) => {
         );
     });
 };
+
 //user sign up
 router.post('/sign-up', (req, res) => {
     const { userId, userPassword } = req.body;
@@ -52,7 +54,7 @@ router.post('/sign-up', (req, res) => {
 });
 
 //user sign-in
-router.get('/sign-in', async (req, res) => {
+router.get('/sign-in', async (req, res, next) => {
     const { userId, userPassword } = req.body;
     try {
         const query = 'SELECT * FROM public.user WHERE "userId" = $1';
@@ -69,9 +71,46 @@ router.get('/sign-in', async (req, res) => {
 
         if (hashPassword !== user.userPassword) {
             return res.status(401).send('Invalid password');
+        } else {
+            try {
+                //access 토큰 발급
+                const accessToken = jwt.sign(
+                    {
+                        id: user.userId,
+                    },
+                    process.env.ACCESS_SECRET,
+                    {
+                        expiresIn: '1m',
+                        issuer: 'uncle.hb',
+                    }
+                );
+                //refresh 토큰 발급
+                const refreshToken = jwt(
+                    {
+                        id: user.userId,
+                    },
+                    process.env.REFRESH_SECRET,
+                    {
+                        expiresIn: '24h',
+                        issuer: 'uncle.hb',
+                    }
+                );
+                //토큰 전송
+                res.cookie('accessToken', accessToken, {
+                    secure: false,
+                    httpOnly: true,
+                });
+                res.cookie('refreshToken', refreshToken, {
+                    secure: false,
+                    httpOnly: true,
+                });
+                res.status(200).send('Login successful');
+                console.log(rows);
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Server error');
+            }
         }
-        // res.status(200).send('Login successful');
-        res.json(user.uuid);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
