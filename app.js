@@ -10,7 +10,13 @@ import allTogetherRoutes from './routes/allTogetherRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 const app = express();
 const port = 8080;
-app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:5173/',
+        credentials: true,
+    })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use the routes defined in projectRoutes.js
