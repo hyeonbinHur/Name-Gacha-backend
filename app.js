@@ -12,7 +12,7 @@ const app = express();
 const port = 8080;
 app.use(
     cors({
-        origin: 'http://localhost:5173/',
+        origin: ['http://localhost:5173', 'http://localhost:5173/auth'],
         credentials: true,
     })
 );

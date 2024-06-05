@@ -9,13 +9,14 @@ const router = express.Router();
 const findUser = (userId) => {
     return new Promise((resolve, reject) => {
         dbClient.query(
-            'SELECT * FROM public.user WHERE userId = $1',
+            'SELECT * FROM public.user WHERE "userId" = $1',
             [userId],
             (err, queryRes) => {
                 if (err) {
                     console.error(err);
                     reject('Failed to retrieve data');
                 } else {
+                    console.log(queryRes.rows.length);
                     if (queryRes.rows.length > 0) {
                         resolve('User already exists');
                     } else {
@@ -28,10 +29,11 @@ const findUser = (userId) => {
 };
 
 //user sign up
-router.post('/sign-up', (req, res) => {
+router.post('/sign-up', async (req, res) => {
     const { userId, userPassword } = req.body;
-    const checkUser = findUser(userId);
-    if (checkUser === 'Available ID') {
+    const checkUser = await findUser(userId);
+    console.log(checkUser);
+    if (checkUser == 'Available ID') {
         const inputPassword = userPassword;
         const salt = crypto.randomBytes(128).toString('base64');
         const hashPassword = crypto
@@ -54,7 +56,7 @@ router.post('/sign-up', (req, res) => {
 });
 
 //user sign-in
-router.get('/sign-in', async (req, res, next) => {
+router.post('/sign-in', async (req, res) => {
     const { userId, userPassword } = req.body;
     try {
         const query = 'SELECT * FROM public.user WHERE "userId" = $1';
@@ -72,51 +74,34 @@ router.get('/sign-in', async (req, res, next) => {
         if (hashPassword !== user.userPassword) {
             return res.status(401).send('Invalid password');
         } else {
-            try {
-                //access 토큰 발급
-                const accessToken = jwt.sign(
-                    {
-                        id: user.userId,
-                    },
-                    process.env.ACCESS_SECRET,
-                    {
-                        expiresIn: '1m',
-                        issuer: 'uncle.hb',
-                    }
-                );
-                //refresh 토큰 발급
-                const refreshToken = jwt(
-                    {
-                        id: user.userId,
-                    },
-                    process.env.REFRESH_SECRET,
-                    {
-                        expiresIn: '24h',
-                        issuer: 'uncle.hb',
-                    }
-                );
-                //토큰 전송
-                res.cookie('accessToken', accessToken, {
-                    secure: false,
-                    httpOnly: true,
-                });
-                res.cookie('refreshToken', refreshToken, {
-                    secure: false,
-                    httpOnly: true,
-                });
-                res.status(200).send('Login successful');
-                console.log(rows);
-            } catch (err) {
-                console.error(err);
-                res.status(500).send('Server error');
-            }
+            // Access token 발급
+            const accessToken = jwt.sign(
+                { id: user.userId },
+                process.env.ACCESS_SECRET,
+                { expiresIn: '1m', issuer: 'uncle.hb' }
+            );
+            // Refresh token 발급
+            const refreshToken = jwt.sign(
+                { id: user.userId },
+                process.env.REFRESH_SECRET,
+                { expiresIn: '24h', issuer: 'uncle.hb' }
+            );
+            // 토큰 전송
+            res.cookie('accessToken', accessToken, {
+                secure: false,
+                httpOnly: true,
+            });
+            res.cookie('refreshToken', refreshToken, {
+                secure: false,
+                httpOnly: true,
+            });
+            res.status(200).send('Login successful');
         }
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 });
-
 //get access token
 
 //get refresh token
