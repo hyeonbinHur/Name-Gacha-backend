@@ -2,8 +2,6 @@ import express from 'express';
 import dbClient from '../db/dbClient.js';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { access } from 'fs';
-import cookieParser from 'cookie-parser';
 
 const router = express.Router();
 
@@ -69,7 +67,6 @@ router.post('/sign-in', async (req, res) => {
             .createHash('sha512')
             .update(userPassword + salt)
             .digest('hex');
-
         if (hashPassword !== user.userPassword) {
             return res.status(401).send('Invalid password');
         } else {
@@ -98,8 +95,8 @@ router.post('/sign-in', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
-//get access token
 
+//get access token
 router.post('/accesstoken', async (req, res) => {
     const { accessToken } = req.cookies;
     if (!accessToken) {
@@ -140,9 +137,27 @@ router.post('/refreshtoken', async (req, res) => {
         }
     }
 });
+
 //login success?
+router.post('./login-check', async (req, res) => {
+    try {
+        const token = req.cookies.accessToken;
+        const data = jwt.verify(token, process.env.ACCESS_SECRET);
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 //logout
+router.post('./sign-out', async (req, res) => {
+    try {
+        res.cookie('accessToken', '');
+        res.status(200).json('Logout Sucess');
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 /*
 app.post('./login');
