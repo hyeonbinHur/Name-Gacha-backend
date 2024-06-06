@@ -21,3 +21,5 @@
 # jWT & cookie-parser
 
 > npm install jsonwebtoken cookie-parser
+
+token algoritm = hs256

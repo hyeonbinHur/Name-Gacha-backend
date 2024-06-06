@@ -3,6 +3,7 @@ import dbClient from '../db/dbClient.js';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { access } from 'fs';
+import cookieParser from 'cookie-parser';
 
 const router = express.Router();
 
@@ -16,9 +17,8 @@ const findUser = (userId) => {
                     console.error(err);
                     reject('Failed to retrieve data');
                 } else {
-                    console.log(queryRes.rows.length);
                     if (queryRes.rows.length > 0) {
-                        resolve('User already exists');
+                        resolve(queryRes.rows);
                     } else {
                         resolve('Available ID');
                     }
@@ -32,7 +32,6 @@ const findUser = (userId) => {
 router.post('/sign-up', async (req, res) => {
     const { userId, userPassword } = req.body;
     const checkUser = await findUser(userId);
-    console.log(checkUser);
     if (checkUser == 'Available ID') {
         const inputPassword = userPassword;
         const salt = crypto.randomBytes(128).toString('base64');
@@ -74,19 +73,16 @@ router.post('/sign-in', async (req, res) => {
         if (hashPassword !== user.userPassword) {
             return res.status(401).send('Invalid password');
         } else {
-            // Access token 발급
             const accessToken = jwt.sign(
-                { id: user.userId },
+                { id: user.userId, uuid: user.uuid },
                 process.env.ACCESS_SECRET,
                 { expiresIn: '1m', issuer: 'uncle.hb' }
             );
-            // Refresh token 발급
             const refreshToken = jwt.sign(
-                { id: user.userId },
+                { id: user.userId, uuid: user.uuid },
                 process.env.REFRESH_SECRET,
                 { expiresIn: '24h', issuer: 'uncle.hb' }
             );
-            // 토큰 전송
             res.cookie('accessToken', accessToken, {
                 secure: false,
                 httpOnly: true,
@@ -104,6 +100,20 @@ router.post('/sign-in', async (req, res) => {
 });
 //get access token
 
+router.post('/accesstoken', async (req, res) => {
+    const { accessToken } = req.cookies;
+    if (!accessToken) {
+        return res.status(401).send('Access token missing');
+    } else {
+        try {
+            const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
+            res.status(200).send(decoded);
+        } catch (err) {
+            console.error('Access token verification failed:', err);
+            res.status(500).send('Failed to verify access token');
+        }
+    }
+});
 //get refresh token
 
 //login success?
