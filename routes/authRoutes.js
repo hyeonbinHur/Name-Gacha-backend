@@ -109,13 +109,37 @@ router.post('/accesstoken', async (req, res) => {
             const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
             res.status(200).send(decoded);
         } catch (err) {
-            console.error('Access token verification failed:', err);
-            res.status(500).send('Failed to verify access token');
+            res.status(500).send(err);
         }
     }
 });
-//get refresh token
 
+//refresh 토큰 갱신
+router.post('/refreshtoken', async (req, res) => {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+        return res.status(401).send('Refresh token missing');
+    } else {
+        try {
+            const decoded = jwt.verify(
+                refreshToken,
+                process.env.REFRESH_SECRET
+            );
+            const accessToken = jwt.sign(
+                { id: decoded.userId, uuid: decoded.uuid },
+                process.env.ACCESS_SECRET,
+                { expiresIn: '1m', issuer: 'uncle.hb' }
+            );
+            res.cookie('accessToken', accessToken, {
+                secure: false,
+                httpOnly: true,
+            });
+            res.status(200).send(decoded);
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    }
+});
 //login success?
 
 //logout
