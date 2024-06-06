@@ -78,7 +78,7 @@ router.post('/sign-in', async (req, res) => {
             const refreshToken = jwt.sign(
                 { id: user.userId, uuid: user.uuid },
                 process.env.REFRESH_SECRET,
-                { expiresIn: '24h', issuer: 'uncle.hb' }
+                { expiresIn: '1m', issuer: 'uncle.hb' }
             );
             res.cookie('accessToken', accessToken, {
                 secure: false,
@@ -106,7 +106,13 @@ router.post('/accesstoken', async (req, res) => {
             const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
             res.status(200).send(decoded);
         } catch (err) {
-            res.status(500).send(err);
+            if (err instanceof jwt.TokenExpiredError) {
+                res.status(401).send('Refresh token expired');
+            } else if (err instanceof jwt.JsonWebTokenError) {
+                res.status(401).send('Invalid refresh token');
+            } else {
+                res.status(500).send('Internal Server Error');
+            }
         }
     }
 });
@@ -133,7 +139,13 @@ router.post('/refreshtoken', async (req, res) => {
             });
             res.status(200).send(decoded);
         } catch (err) {
-            res.status(500).send(err);
+            if (err instanceof jwt.TokenExpiredError) {
+                res.status(401).send('Refresh token expired');
+            } else if (err instanceof jwt.JsonWebTokenError) {
+                res.status(401).send('Invalid refresh token');
+            } else {
+                res.status(500).send('Internal Server Error');
+            }
         }
     }
 });
@@ -143,7 +155,9 @@ router.post('./login-check', async (req, res) => {
     try {
         const token = req.cookies.accessToken;
         const data = jwt.verify(token, process.env.ACCESS_SECRET);
-        res.status(200).json(data);
+        const userId = data.userId;
+        const userData = findUser(userId);
+        res.status(200).json(userData);
     } catch (err) {
         res.status(500).json(err);
     }

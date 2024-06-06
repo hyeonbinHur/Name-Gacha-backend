@@ -32,6 +32,14 @@ app.use(
     authRoutes
 );
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 dotenv.config();
 const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_API_KEY,
