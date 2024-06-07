@@ -71,14 +71,15 @@ router.post('/sign-in', async (req, res) => {
             return res.status(401).send('Invalid password');
         } else {
             const accessToken = jwt.sign(
-                { id: user.userId, uuid: user.uuid },
+                { id: user.userId, uuid: user.uuid, projects: user.projects },
                 process.env.ACCESS_SECRET,
                 { expiresIn: '1m', issuer: 'uncle.hb' }
             );
+
             const refreshToken = jwt.sign(
-                { id: user.userId, uuid: user.uuid },
+                { id: user.userId, uuid: user.uuid, projects: user.projects },
                 process.env.REFRESH_SECRET,
-                { expiresIn: '1m', issuer: 'uncle.hb' }
+                { expiresIn: '24h', issuer: 'uncle.hb' }
             );
             res.cookie('accessToken', accessToken, {
                 secure: false,
@@ -131,7 +132,7 @@ router.post('/refreshtoken', async (req, res) => {
             const accessToken = jwt.sign(
                 { id: decoded.userId, uuid: decoded.uuid },
                 process.env.ACCESS_SECRET,
-                { expiresIn: '1m', issuer: 'uncle.hb' }
+                { expiresIn: '24h', issuer: 'uncle.hb' }
             );
             res.cookie('accessToken', accessToken, {
                 secure: false,
