@@ -23,7 +23,6 @@ router.get('/projects/:id', (req, res) => {
         [projectId],
         (err, queryRes) => {
             if (err) {
-                console.error(err);
                 res.status(500).send('Failed to retrieve data');
             } else {
                 res.json(queryRes.rows);

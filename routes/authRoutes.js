@@ -71,13 +71,13 @@ router.post('/sign-in', async (req, res) => {
             return res.status(401).send('Invalid password');
         } else {
             const accessToken = jwt.sign(
-                { id: user.userId, uuid: user.uuid, projects: user.projects },
+                { uuid: user.uuid },
                 process.env.ACCESS_SECRET,
                 { expiresIn: '1m', issuer: 'uncle.hb' }
             );
 
             const refreshToken = jwt.sign(
-                { id: user.userId, uuid: user.uuid, projects: user.projects },
+                { uuid: user.uuid },
                 process.env.REFRESH_SECRET,
                 { expiresIn: '24h', issuer: 'uncle.hb' }
             );
@@ -130,7 +130,7 @@ router.post('/refreshtoken', async (req, res) => {
                 process.env.REFRESH_SECRET
             );
             const accessToken = jwt.sign(
-                { id: decoded.userId, uuid: decoded.uuid },
+                { uuid: decoded.uuid },
                 process.env.ACCESS_SECRET,
                 { expiresIn: '24h', issuer: 'uncle.hb' }
             );
@@ -165,13 +165,26 @@ router.post('./login-check', async (req, res) => {
 });
 
 //logout
-router.post('./sign-out', async (req, res) => {
+router.post('/sign-out', async (req, res) => {
     try {
         res.cookie('accessToken', '');
         res.status(200).json('Logout Sucess');
     } catch (err) {
         res.status(500).json(err);
     }
+});
+
+//get user data
+router.get('/user/:id', async (req, res) => {
+    const uuid = req.params.id;
+    const query = 'SELECT * FROM public.user WHERE "uuid" = $1';
+    dbClient.query(query, [uuid], (err, queryRes) => {
+        if (err) {
+            res.status(500).send('Failed to retrieve data');
+        } else {
+            res.json(queryRes.rows[0]);
+        }
+    });
 });
 
 /*
