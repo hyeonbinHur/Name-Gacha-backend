@@ -8,6 +8,8 @@ import variableRoutes from './routes/variableRoutes.js';
 import allTogetherRoutes from './routes/allTogetherRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
+import aiRoutes from './ai/assistant.js';
+
 // import { OpenAI } from 'openai';
 
 // const openai = new OpenAI({
@@ -53,7 +55,7 @@ import cookieParser from 'cookie-parser';
 //     console.log(m);
 // });
 
-console.log(messages);
+// console.log(messages);
 const app = express();
 const port = 8080;
 app.use(
@@ -74,7 +76,8 @@ app.use(
     functionRoutes,
     variableRoutes,
     allTogetherRoutes,
-    authRoutes
+    authRoutes,
+    aiRoutes
 );
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
