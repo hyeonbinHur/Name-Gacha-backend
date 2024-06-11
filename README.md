@@ -23,3 +23,7 @@
 > npm install jsonwebtoken cookie-parser
 
 token algoritm = hs256
+
+# open ai
+
+> npm install openai
