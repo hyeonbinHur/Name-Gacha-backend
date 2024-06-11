@@ -94,7 +94,6 @@ ORDER BY p."projectId", pa."pageId", v."variableId", f."functionId"
             res.status(500).send('Failed to retrieve data');
         } else {
             const projects = {};
-
             queryRes.rows.forEach((row) => {
                 if (!projects[row.projectId]) {
                     projects[row.projectId] = {
