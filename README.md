@@ -27,3 +27,7 @@ token algoritm = hs256
 # open ai
 
 > npm install openai
+
+# debugging library winston
+
+> npm install winston

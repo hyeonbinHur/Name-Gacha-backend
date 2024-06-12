@@ -11,6 +11,7 @@
 
 import { OpenAI } from 'openai';
 import express from 'express';
+import winston from 'winston';
 
 const router = express.Router();
 
@@ -18,22 +19,37 @@ const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_API_KEY,
 });
 
-const assistant = await openai.beta.assistants.create({
-    name: 'nameGacha AI',
-    instructions:
-        "Objective:You are required to generate nine possible names for a function or variable based on the description provided by the user. After generating these names, you will also provide a brief explanation (one or two sentences) describing the suitability or relevance of these names.Input from User: The user will provide:A brief description or definition of the function or variable.The desired naming convention (e.g., camelCase, PascalCase, snake_case).Output Requirements:Names: Suggest nine potential names that fit the user's description and specified naming convention.Explanation: Provide a general explanation (one sentence) that relates to all suggested names, explaining how they match the function or variable's purpose.",
-    tools: [
-        {
-            type: 'code_interpreter',
-        },
-    ],
-    model: 'gpt-4o',
-});
+const assistant_id = process.env.ASSISTANT_ID;
+// const assistant = await openai.beta.assistants.create({
+//     name: 'nameGacha AI',
+//     instructions:
+//         "Objective:You are required to generate nine possible names for a function or variable based on the description provided by the user. After generating these names, you will also provide a brief explanation (one or two sentences) describing the suitability or relevance of these names.Input from User: The user will provide:A brief description or definition of the function or variable.The desired naming convention (e.g., camelCase, PascalCase, snake_case).Output Requirements:Names: Suggest nine potential names that fit the user's description and specified naming convention.Explanation: Provide a general explanation (one sentence) that relates to all suggested names, explaining how they match the function or variable's purpose.",
+//     tools: [
+//         {
+//             type: 'code_interpreter',
+//         },
+//     ],
+//     model: 'gpt-4o',
+// });
 
 let poolingInterval;
+const logger = winston.createLogger({
+    level: process.env.DD_LOG_LEVEL || 'debug', // 환경변수 또는 기본값 'info'
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(
+            (info) =>
+                `${info.timestamp} [${info.level.toUpperCase()}]: ${
+                    info.message
+                }`
+        )
+    ),
+    transports: [new winston.transports.Console()],
+});
 
 const createThread = async () => {
     const thread = await openai.beta.threads.create();
+    logger.debug(thread);
     return thread;
 };
 
@@ -46,7 +62,7 @@ const addMessage = async (threadId, message) => {
 
 const runAI = async (threadId) => {
     const response = await openai.beta.threads.runs.create(threadId, {
-        assistant_id: assistant.id,
+        assistant_id: assistant_id,
     });
     return response;
 };
