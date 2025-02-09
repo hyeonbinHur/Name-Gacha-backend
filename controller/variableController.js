@@ -6,7 +6,7 @@ const get_variable = async (req, res) => {
     const data = await service.readAllVariable(varId);
     res.stats(201).json(data);
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).send(err.ㅈmessage);
   }
 };
 
