@@ -4,7 +4,7 @@ const get_variable = async (req, res) => {
   try {
     const { varId } = req.query;
     const data = await service.readAllVariable(varId);
-    res.stats(201).json(data);
+    res.status(201).json(data);
   } catch (err) {
     res.status(500).send(err.ㅈmessage);
   }
