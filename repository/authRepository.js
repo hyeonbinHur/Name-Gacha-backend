@@ -40,7 +40,21 @@ const updateUserById = async (userId, userOldPassword, userNewPassword) => {
   });
 };
 
-const findUserById = async (uuid) => {
+const findUserByUserId = async (userId) => {
+  return new Promise((resolve, reject) => {
+    const query = "";
+    const values = [userId];
+    connection.query(query, values, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+const findUserByUUID = async (uuid) => {
   return new Promise((resolve, reject) => {
     const query = "";
     const values = [uuid];
@@ -58,5 +72,6 @@ export default {
   signInUserByCredentials,
   createUser,
   updateUserById,
-  findUserById,
+  findUserByUserId,
+  findUserByUUID,
 };
