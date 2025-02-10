@@ -12,7 +12,7 @@ const get_projects = async (req, res) => {
 const get_project = async (req, res) => {
   try {
     const { uuid } = req.query;
-    const data = service.readProject(uuid);
+    const data = service.readProjectByUUID(uuid);
     res.status(201).json(data);
   } catch (err) {
     res.status(500).send(err.message);
