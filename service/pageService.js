@@ -1,20 +1,20 @@
 import pageRepository from "../repository/pageRepository.js";
 
-const readAllPages = async () => {
-  try {
-    const result = await pageRepository.findAll();
-    return result;
-  } catch (err) {
-    throw new Error("Failed to connect with database");
-  }
-};
+// const readAllPages = async () => {
+//   try {
+//     const result = await pageRepository.findAll();
+//     return result;
+//   } catch (err) {
+//     throw new Error("Failed to connect with database");
+//   }
+// };
 
 const readPageById = async (pageId) => {
   try {
     const result = await pageRepository.findById(pageId);
-    return result;
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 500, response: err.message };
   }
 };
 
@@ -47,7 +47,7 @@ const deletePage = async (pageId) => {
 };
 
 export default {
-  readAllPages,
+  // readAllPages,
   readPageById,
   createPage,
   updatePage,

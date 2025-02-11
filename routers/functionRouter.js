@@ -2,9 +2,9 @@ import express from "express";
 import controller from "../controller/functionController.js";
 const router = express.Router();
 //이거 안쓸거고
-router.get("/function/:functionId", controller.get_function);
-router.get("/functions", controller.get_functions);
-router.delete("/function_inpage/:pageId", controller.delete_function_inpage);
+// router.get("/function/:functionId", controller.get_function);
+// router.get("/functions", controller.get_functions);
+// router.delete("/function_inpage/:pageId", controller.delete_function_inpage);
 
 
 
