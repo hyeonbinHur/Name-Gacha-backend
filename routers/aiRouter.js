@@ -6,5 +6,6 @@ router.get("/ai/thread", controller.create_thread);
 router.get("/ai/message", controller.get_message);
 router.get("/ai/status", controller.get_status);
 router.get("/ai/reply", controller.get_reply);
+
 router.post("/ai", controller.send_message);
 export default router;

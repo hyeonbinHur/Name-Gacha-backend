@@ -59,8 +59,9 @@ const readReply = async (threadId) => {
 
 const sendMessage = async (threadId, message) => {
   try {
-    const addMessageResponse = await aiUtils.addMessage(threadId, message);
-    const run = await aiUtils.runAI(threadId);
+     await aiUtils.addMessage(threadId, message);
+     const run = await aiUtils.runAI(threadId);
+     console.log(run);
     return { statusCode: 200, response: run.id };
   } catch (error) {
     return { statusCode: 500, response: err.message };
