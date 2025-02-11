@@ -1,7 +1,6 @@
 import { OpenAI } from "openai";
-
 const openai = new OpenAI({
-  apiKey: process.env.OPEN_AI_KEY,
+  apiKey: process.env.OPEN_AI_API_KEY,
 });
 
 const assistant_id = process.env.ASSISTANT_ID;

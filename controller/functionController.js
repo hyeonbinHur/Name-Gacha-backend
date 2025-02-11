@@ -22,12 +22,12 @@ const get_functions = async (req, res) => {
 const create_function = async (req, res) => {
   try {
     const { pageId, functionName, functionExp } = req.body;
-    const data = await functionService.createFunction(
+    const { statusCode, response } = await functionService.createFunction(
       functionName,
       functionExp,
       pageId
     );
-    res.status(201).send(data);
+    res.status(statusCode).send(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -35,14 +35,14 @@ const create_function = async (req, res) => {
 
 const update_function = async (req, res) => {
   try {
-    const { functionId } = req.params.functionId;
+    const functionId = req.params.functionId;
     const { functionExp, functionName } = req.body;
-    const data = await functionService.updateFunction(
+    const { statusCode, response } = await functionService.updateFunction(
       functionId,
       functionName,
       functionExp
     );
-    return data;
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -50,8 +50,10 @@ const update_function = async (req, res) => {
 
 const delete_function_inpage = async (req, res) => {
   try {
-    const { pageId } = req.params.pageId;
-    const data = functionService.deleteFunctionInPage(pageId);
+    const functionId = req.params.functionId;
+    const { statusCode, response } = await functionService.deleteFunctionInPage(
+      pageId
+    );
     return data;
   } catch (err) {
     res.status(500).send(err.message);
@@ -60,9 +62,11 @@ const delete_function_inpage = async (req, res) => {
 
 const delete_function_certain = async (req, res) => {
   try {
-    const { functionId } = req.params.functionId;
-    const data = functionService.deleteFunctionCetain(functionId);
-    return data;
+    const functionId = req.params.functionId;
+    const { statusCode, response } = await functionService.deleteFunctionCetain(
+      functionId
+    );
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }

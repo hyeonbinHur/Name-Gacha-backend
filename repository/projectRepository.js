@@ -31,8 +31,7 @@ const findById = async (uuid) => {
 
 const create = async (projectName, uuid) => {
   return new Promise((resolve, reject) => {
-    const query =
-      'INSERT INTO public.projects ("projectName", "userId_frk") VALUES ($1, $2) RETURNING *;';
+    const query = "INSERT INTO Project (Project_Name, User_UUID) VALUES (?, ?)";
     const values = [projectName, uuid];
     connection.query(query, values, (err, result) => {
       if (err) {
@@ -46,8 +45,7 @@ const create = async (projectName, uuid) => {
 
 const update = async (projectName, projectId) => {
   return new Promise((resolve, reject) => {
-    const query =
-      'UPDATE public.projects SET "projectName" = $1 WHERE "projectId" = $2 RETURNING *';
+    const query = "UPDATE Project SET Project_Name = ? WHERE Project_ID = ?";
     const values = [projectName, projectId];
     connection.query(query, values, (err, result) => {
       if (err) {
@@ -59,10 +57,11 @@ const update = async (projectName, projectId) => {
   });
 };
 
+//쿼리 조인문으로 수정해서 project > page > variable, function 삭제해야함
 const deleteById = async (projectId) => {
   return new Promise((resolve, reject) => {
     const query =
-      'DELETE FROM public.projects WHERE "projectId" = $1 RETURNING *;';
+      "DELETE pr, p, v, f FROM Project pr LEFT JOIN Page p ON pr.Project_ID = p.Project_ID LEFT JOIN `Variable` v ON p.Page_ID = v.Page_ID LEFT JOIN `Function` f ON p.Page_ID = f.Page_ID WHERE pr.Project_ID = ?";
     const values = [projectId];
     connection.query(query, values, (err, result) => {
       if (err) {

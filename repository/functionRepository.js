@@ -1,5 +1,6 @@
 import connection from "../lib/db_info.js";
 
+// 안쓸거같고
 const findAll = async () => {
   return new Promise((resolve, reject) => {
     const query = "";
@@ -12,6 +13,8 @@ const findAll = async () => {
     });
   });
 };
+
+//안쓸거 같고
 const findById = async (functionId) => {
   return new Promise((resolve, reject) => {
     const query = "";
@@ -25,9 +28,12 @@ const findById = async (functionId) => {
     });
   });
 };
+
+
 const create = async (functionName, functionExp, pageId) => {
   return new Promise((resolve, reject) => {
-    const query = "";
+    const query =
+      "INSERT INTO `Function` (Function_Name, Function_Exp, Page_ID) VALUES (?, ?, ?)";
     const values = [functionName, functionExp, pageId];
     connection.query(query, values, (err, result) => {
       if (err) {
@@ -38,10 +44,12 @@ const create = async (functionName, functionExp, pageId) => {
     });
   });
 };
+
 const update = async (functionId, functionName, functionExp) => {
   return new Promise((resolve, reject) => {
-    const query = "";
-    const values = [functionId, functionName, functionExp];
+    const query =
+      "UPDATE `Function` SET Function_Name = ?, Function_Exp = ? WHERE Function_ID = ?";
+    const values = [functionName, functionExp, functionId];
     connection.query(query, values, (err, result) => {
       if (err) {
         reject(err);
@@ -54,7 +62,7 @@ const update = async (functionId, functionName, functionExp) => {
 
 const deleteById = async (functionId) => {
   return new Promise((resolve, reject) => {
-    const query = "";
+    const query = "DELETE FROM `Function` WHERE Function_ID = ?";
     const values = [functionId];
     connection.query(query, values, (err, result) => {
       if (err) {

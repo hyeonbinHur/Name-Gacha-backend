@@ -2,7 +2,7 @@ import aiUtils from "../utils/aiUtils.js";
 
 const createThread = async (req, res) => {
   try {
-    const thread = await openai.beta.threads.create();
+    const thread = await aiUtils.openai.beta.threads.create();
     return { statusCode: 200, response: thread };
   } catch (error) {
     return { statusCode: 500, response: error };
@@ -17,7 +17,7 @@ const readMessages = async (threadId) => {
       }, 100000);
     });
     const messageList = await Promise.race([
-      openai.beta.threads.messages.list(threadId),
+      aiUtils.openai.beta.threads.messages.list(threadId),
       timeout,
     ]);
     let messages = [];
@@ -33,7 +33,10 @@ const readMessages = async (threadId) => {
 
 const checkStatus = async (threadId, runId) => {
   try {
-    const runObject = await openai.beta.threads.runs.retrieve(threadId, runId);
+    const runObject = await aiUtils.openai.beta.threads.runs.retrieve(
+      threadId,
+      runId
+    );
     const status = runObject.status;
     return { statusCode: 200, response: status };
   } catch (err) {
@@ -43,7 +46,9 @@ const checkStatus = async (threadId, runId) => {
 
 const readReply = async (threadId) => {
   try {
-    const messageList = await openai.beta.threads.messages.list(threadId);
+    const messageList = await aiUtils.openai.beta.threads.messages.list(
+      threadId
+    );
     const messages = messageList.body.data;
     const lastMessage = messages[0].content;
     return { statusCode: 200, response: lastMessage };

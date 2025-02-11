@@ -1,4 +1,4 @@
-import pageRepository from "../repository/pageRepository";
+import pageRepository from "../repository/pageRepository.js";
 
 const readAllPages = async () => {
   try {
@@ -20,32 +20,29 @@ const readPageById = async (pageId) => {
 
 const createPage = async (pageName, pageExp, projectId) => {
   try {
-    const result = await pageRepository.createPage(
-      pageName,
-      pageExp,
-      projectId
-    );
-    return result;
+    const result = await pageRepository.create(pageName, pageExp, projectId);
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 500, response: err.message };
   }
 };
 
 const updatePage = async (pageId, pageName, pageExp) => {
   try {
     const result = await pageRepository.update(pageId, pageName, pageExp);
-    return result;
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 500, response: err.message };
   }
 };
 
 const deletePage = async (pageId) => {
   try {
     const result = await pageRepository.deleteById(pageId);
-    return result;
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    console.log(err.message);
+    return { statusCode: 500, response: err.message };
   }
 };
 

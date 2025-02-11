@@ -22,16 +22,19 @@ const readProjectByUUID = async (uuid) => {
 
 const createProject = async (projectName, uuid) => {
   try {
-    const result = projectRepository.create(projectName, uuid);
+    console.log(projectName, uuid);
+    const result = await projectRepository.create(projectName, uuid);
     return result;
   } catch (err) {
+    console.log(err.message);
     throw new Error("Failed to connect with database");
   }
 };
 
-const updateProject = async (projectName, projectId) => {
+const updateProject = async (projectId, projectName) => {
   try {
-    const result = projectRepository.update(projectName, projectId);
+    const result = await projectRepository.update(projectName, projectId);
+    console.log(result);
     return result;
   } catch (err) {
     throw new Error("Failed to connect with database");
@@ -40,9 +43,10 @@ const updateProject = async (projectName, projectId) => {
 
 const deleteProject = async (projectId) => {
   try {
-    const result = projectRepository.deleteById(projectId);
+    const result = await projectRepository.deleteById(projectId);
     return result;
   } catch (err) {
+    console.log(err.message);
     throw new Error("Failed to connect with database");
   }
 };

@@ -1,7 +1,5 @@
-import * as dotenv from 'dotenv';
-import express from 'express';
+import express from "express";
 import cors from "cors";
-
 import projectRouter from "./routers/projectRouter.js";
 import pageRouter from "./routers/pageRouter.js";
 import functionRouter from "./routers/functionRouter.js";
@@ -15,15 +13,20 @@ const port = 8080;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5173/auth"],
+    origin: "*",
+    allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTION"],
     credentials: true,
   })
 );
+app.use(express.json());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use the routes defined in projectRoutes.js
+app.get("/", (req, res) => {
+  res.send("Welcome to the Panther Charitan API!");
+});
 app.use(
   "/namegacha/api",
   projectRouter,
@@ -34,13 +37,3 @@ app.use(
   aiRouter
 );
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-});
-
-dotenv.config();

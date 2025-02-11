@@ -1,4 +1,4 @@
-import variableRepository from "../repository/variableRepository";
+import variableRepository from "../repository/variableRepository.js";
 
 const readAllVariable = async () => {
   try {
@@ -20,23 +20,27 @@ const readVariable = async (variableId) => {
 
 const createVariable = async (variableName, variableExp, pageId) => {
   try {
-    const result = variableRepository.create(variableName, variableExp, pageId);
-    return result;
+    const result = await variableRepository.create(
+      variableName,
+      variableExp,
+      pageId
+    );
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 500, response: err.message };
   }
 };
 
 const updateVariable = async (variableId, variableName, variableExp) => {
   try {
-    const result = variableRepository.update(
+    const result = await variableRepository.update(
       variableId,
       variableName,
       variableExp
     );
-    return result;
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 500, response: err.message };
   }
 };
 
@@ -51,10 +55,10 @@ const deleteVariableInPage = async (pageId) => {
 
 const deleteVariableCetain = async (variableId) => {
   try {
-    const result = variableRepository.deleteById(variableId);
-    return result;
+    const result = await variableRepository.deleteById(variableId);
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 501, response: err.message };
   }
 };
 

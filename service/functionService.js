@@ -20,23 +20,28 @@ const readFunction = async (functionId) => {
 
 const createFunction = async (functionName, functionExp, pageId) => {
   try {
-    const result = functionRepository.create(functionName, functionExp, pageId);
-    return result;
+    const result = await functionRepository.create(
+      functionName,
+      functionExp,
+      pageId
+    );
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 400, response: err.message };
   }
 };
 
 const updateFunction = async (functionId, functionName, functionExp) => {
   try {
-    const result = functionRepository.update(
+    console.log(functionId);
+    const result = await functionRepository.update(
       functionId,
       functionName,
       functionExp
     );
-    return result;
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 400, response: err.message };
   }
 };
 
@@ -51,10 +56,10 @@ const deleteFunctionInPage = async (pageId) => {
 
 const deleteFunctionCetain = async (functionId) => {
   try {
-    const result = functionRepository.deleteById(functionId);
-    return result;
+    const result = await functionRepository.deleteById(functionId);
+    return { statusCode: 201, response: result };
   } catch (err) {
-    throw new Error("Failed to connect with database");
+    return { statusCode: 401, response: err.message };
   }
 };
 

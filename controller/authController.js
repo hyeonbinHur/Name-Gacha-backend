@@ -3,8 +3,11 @@ import authService from "../service/authService.js";
 const sign_in_user = async (req, res) => {
   try {
     const { userId, userPassword } = req.body;
-    const data = authService.authenticateUser(userId, userPassword);
-    res.status(201).json(data);
+    const { statusCode, response } = await authService.authenticateUser(
+      userId,
+      userPassword
+    );
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -13,8 +16,11 @@ const sign_in_user = async (req, res) => {
 const sign_up_user = async (req, res) => {
   try {
     const { userId, userPassword } = req.body;
-    const data = authService.signUpUser(userId, userPassword);
-    res.status(201).json(data);
+    const { statusCode, response } = await authService.signUpUser(
+      userId,
+      userPassword
+    );
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -61,9 +67,9 @@ const update_user = async (req, res) => {
 
 const get_user = async (req, res) => {
   try {
-    const { uuid } = req.params.uuid;
-    const data = authService.readUser(uuid);
-    return data;
+    const uuid = req.params.uuid;
+    const { statusCode, response } = await authService.readUser(uuid);
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }

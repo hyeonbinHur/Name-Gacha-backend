@@ -1,4 +1,4 @@
-import service from "../service/variableService";
+import service from "../service/variableService.js";
 
 const get_variable = async (req, res) => {
   try {
@@ -22,12 +22,12 @@ const get_variables = async (req, res) => {
 const create_variable = async (req, res) => {
   try {
     const { variableName, variableExp, pageId } = req.body;
-    const data = await service.createVariable(
+    const { statusCode, response } = await service.createVariable(
       variableName,
       variableExp,
       pageId
     );
-    res.status(201).json(data);
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -35,10 +35,14 @@ const create_variable = async (req, res) => {
 
 const update_variable = async (req, res) => {
   try {
-    const { varId } = req.params.varId;
+    const varId = req.params.varId;
     const { variableName, variableExp } = req.body;
-    const data = await service.updateVariable(varId, variableName, variableExp);
-    res.status(201).json(data);
+    const { statusCode, response } = await service.updateVariable(
+      varId,
+      variableName,
+      variableExp
+    );
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -56,9 +60,9 @@ const delete_variable_inpage = async (req, res) => {
 
 const delete_variable_certain = async (req, res) => {
   try {
-    const { varId } = req.params.varId;
-    const data = await service.deleteVariableCetain(varId);
-    res.status(201).json(data);
+    const varId = req.params.varId;
+    const { statusCode, response } = await service.deleteVariableCetain(varId);
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }

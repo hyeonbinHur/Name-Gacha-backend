@@ -1,14 +1,16 @@
-import Service from "../service/pageService";
-const get_page = async (req, res) => {
+import pageService from "../service/pageService.js";
+//이거 안쓸거같고
+const get_pages = async (req, res) => {
   try {
-    const { pageId } = req.params.pageId;
   } catch (err) {
     res.status(500).send(err.message);
   }
 };
-
-const get_pages = async (req, res) => {
+const get_page = async (req, res) => {
   try {
+    const pageId = req.params.pageId;
+    const { statusCode, response } = pageService.readPageById(pageId);
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -17,6 +19,12 @@ const get_pages = async (req, res) => {
 const create_page = async (req, res) => {
   try {
     const { pageName, projectId, pageExp } = req.body;
+    const { statusCode, response } = await pageService.createPage(
+      pageName,
+      pageExp,
+      projectId
+    );
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -24,8 +32,14 @@ const create_page = async (req, res) => {
 
 const update_page = async (req, res) => {
   try {
-    const { pageId } = req.params.pageId;
+    const pageId = req.params.pageId;
     const { pageName, pageExp } = req.body;
+    const { statusCode, response } = await pageService.updatePage(
+      pageId,
+      pageName,
+      pageExp
+    );
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -33,7 +47,9 @@ const update_page = async (req, res) => {
 
 const delete_page = async (req, res) => {
   try {
-    const { pageId } = req.params.pageId;
+    const pageId = req.params.pageId;
+    const { statusCode, response } = await pageService.deletePage(pageId);
+    res.status(statusCode).json(response);
   } catch (err) {
     res.status(500).send(err.message);
   }

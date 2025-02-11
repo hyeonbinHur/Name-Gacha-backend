@@ -1,4 +1,4 @@
-import aiService from "../service/aiService";
+import aiService from "../service/aiService.js";
 
 const create_thread = async (req, res) => {
   try {

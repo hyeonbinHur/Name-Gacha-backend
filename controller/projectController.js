@@ -1,4 +1,4 @@
-import service from "../service/projectService";
+import service from "../service/projectService.js";
 
 const get_projects = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ const get_project = async (req, res) => {
 const create_project = async (req, res) => {
   try {
     const { projectName, uuid } = req.body;
-    const data = service.createProject(projectName, uuid);
+    const data = await service.createProject(projectName, uuid);
     res.status(201).json(data);
   } catch (err) {
     res.status(500).send(err.message);
@@ -32,8 +32,8 @@ const create_project = async (req, res) => {
 const update_project = async (req, res) => {
   try {
     const { projectName } = req.body;
-    const { projectId } = req.params.projectId;
-    const data = service.updateProject(projectId, projectName);
+    const projectId = req.params.projectId;
+    const data = await service.updateProject(projectId, projectName);
     res.status(201).json(data);
   } catch (err) {
     res.status(500).send(err.message);
@@ -42,8 +42,8 @@ const update_project = async (req, res) => {
 
 const delete_project = async (req, res) => {
   try {
-    const { projectId } = req.params.projectId;
-    const data = service.deleteProject(projectId);
+    const projectId = req.params.projectId;
+    const data = await service.deleteProject(projectId);
     res.status(201).json(data);
   } catch (err) {
     res.status(500).send(err.message);
